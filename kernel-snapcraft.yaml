@@ -1,0 +1,52 @@
+name: pi-z2w-kernel
+adopt-info: kernel
+summary: The generic Linux kernel for Pi Zero 2W
+description: |
+  The generic Linux kernel for Pi Zero 2W
+grade: stable
+confinement: strict
+type: kernel
+
+architectures:
+  - build-on: amd64
+    run-on: arm64
+
+parts:
+  firmware:
+    plugin: nil
+    source: linux-firmware
+    override-build: |
+      mkdir -p $SNAPCRAFT_PART_INSTALL/firmware
+      cp -av ./* $SNAPCRAFT_PART_INSTALL/firmware/
+      cp -av ../../../brcmfmac-firmware/* $SNAPCRAFT_PART_INSTALL/firmware/brcm/
+  kernel:
+    plugin: kernel
+    source: linux
+    kdefconfig: [bcm2709_defconfig, snappy/containers.config, snappy/security.config, snappy/snappy.config, snappy/systemd.config]
+    kconfigs:
+      - CONFIG_RTC_HCTOSYS
+      - CONFIG_RTC_HCTOSYS_DEVICE=rtc0
+      - CONFIG_STRICT_DEVMEM=n
+      - CONFIG_IO_STRICT_DEVMEM=n
+      - CONFIG_DEBUG_INFO=n
+      - CONFIG_DRM_V3D=m
+      - CONFIG_ENCLOSURE_SERVICES=y
+      - CONFIG_SCSI_SAS_ATTRS=y
+      - CONFIG_USB_UAS=y
+    override-pull: |
+      snapcraftctl pull
+      snapcraftctl set-version "rpi2w-linux-5.10.x"
+    override-build: |
+      DATESTART=`date`
+      echo "Starting build at: $DATESTART"
+      snapcraftctl build
+      DATEEND=`date`
+      echo "Stopping build at: $DATEEND"
+    kernel-image-target: Image
+    kernel-with-firmware: false
+    build-packages:
+      - cpio
+      - libssl-dev
+      - on amd64 to arm64:
+        - gcc-aarch64-linux-gnu:amd64
+    after: [ firmware ]
