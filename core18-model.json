@@ -1,0 +1,13 @@
+{
+  "type": "model",
+  "series": "16",
+  "model": "tcse-ubuntucore",
+  "display-name":"Ubuntu Core 18 (arm64)",
+  "architecture": "arm64",
+  "kernel": "pi-z2w-kernel",
+  "gadget": "pi-z2w-gadget",
+  "base": "core18",
+  "authority-id": "<your_key_not_mine>",
+  "brand-id": "<your_key_not_mine>",
+  "timestamp": "2020-11-25T16:50:51+00:00"
+}
