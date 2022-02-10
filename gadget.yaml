@@ -7,7 +7,11 @@ volumes:
       - type: 0C
         filesystem: vfat
         filesystem-label: system-boot
-        size: 128M
+        size: 256M
         content:
+          - source: $kernel:dtbs/dtbs/broadcom/
+            target: /
+          - source: $kernel:dtbs/dtbs/overlays/
+            target: /overlays
           - source: boot-assets/
             target: /
